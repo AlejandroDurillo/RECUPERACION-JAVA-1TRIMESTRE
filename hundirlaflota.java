@@ -1,4 +1,4 @@
-
+package RANDOM;
 
 //IMPORTANTE IMPORTAR ESTO, SIN ESTO NO VA A FUNCIONAR NADA
 import java.util.Random;
@@ -103,39 +103,20 @@ public class hundirlaflota {
     }
 
     //OJO en el turno de ataque del jugador tienes que declarar el array ENEMIGO
-    static void turnoAtaque(String[][] tableroEnemigo) {
-        Scanner sc = new Scanner(System.in);
-        int barcosDerribados = 3; //aqui ponemos el numero de barcos enemigos que haya
 
-        //Mientras queden barcos enemigos
-        while (barcosDerribados != 0) {
-            System.out.println("Añade la fila que quieras atacar: ");
-            int i = sc.nextInt();
-            System.out.println("Añade la columna que quieras atacar");
-            int j = sc.nextInt();
 
-            //comprobamos limites del tablero
-            if (i < 0 || i >= FILAS || j < 0 || j >= COLUMNAS) {
-                System.out.println("Disparo fuera del tablero");
-                continue;
-            }
 
-            //comprobaciones
-            if (tableroEnemigo[i][j].equals(ENEMIGO)) {
-                System.out.println("Has dado al enemigo");
-                tableroEnemigo[i][j] = AGUA; //marcamos la posicion para no volver a contarla
-                barcosDerribados--;
-            } else {
-                System.out.println("Has fallado, vuelvelo a intentar");
-            }
-        }
+    
 
-        System.out.println("ENHORABUENA HAS GANADO");
-    }
 
     public static void main(String[] args) {
         String[][] tablero = new String[FILAS][COLUMNAS]; //inicializamos el tablero del jugador
         String[][] tableroEnemigo = new String[FILAS][COLUMNAS]; //tablero enemigo
+        Random rnd = new Random();
+        Scanner sc = new Scanner(System.in);
+        int barcosDerribados = 3; //aqui ponemos el numero de barcos enemigos que haya
+        int barcosPerdidos = 3;
+        boolean salir = false;
 
         inicializarTablero(tablero);
         inicializarTableroEnemigo(tableroEnemigo);
@@ -144,10 +125,68 @@ public class hundirlaflota {
         colocarBarcos(tablero);
         barcosEnemigos(tableroEnemigo);
 
-        //el juego se controla desde el propio turno de ataque
-        turnoAtaque(tableroEnemigo);
+        while(salir != true){
+            //Turno ataque aliado
+            while (barcosDerribados != 0) {
+                System.out.println("Añade la fila que quieras atacar: ");
+                int i = sc.nextInt();
+                System.out.println("Añade la columna que quieras atacar");
+                int j = sc.nextInt();
+
+                //comprobamos limites del tablero
+                if (i < 0 || i >= FILAS || j < 0 || j >= COLUMNAS) {
+                    System.out.println("Disparo fuera del tablero");
+                    continue;
+                
+                }
+
+                //comprobaciones
+                if (tableroEnemigo[i][j].equals(ENEMIGO)) {
+                    System.out.println("Has dado al enemigo");
+                    tableroEnemigo[i][j] = AGUA; //marcamos la posicion para no volver a contarla
+                    barcosDerribados--;
+                } else {
+                    System.out.println("Has fallado, vuelvelo a intentar");
+                }
+
+                //ataque enemigo
+                int ie = rnd.nextInt(FILAS);
+                int je = rnd.nextInt(COLUMNAS);
+
+                //comprobaciones del enemigo
+                if(tablero[ie][je].equals(BARCO)){
+                    System.out.println("Nos han dado");
+                    tablero[ie][je] = AGUA;
+                    barcosPerdidos--;
+                    
+                }else{
+                    System.out.println("El enemigo ha fallado");
+                }
+                if(barcosPerdidos == 0){
+                    System.out.println("Has perdido");
+                    salir = true;
+                    return;
+                }
+
+            }
+
+            if(barcosDerribados == 0){
+                System.out.println("ENHORABUENA HAS GANADO");
+                salir = true;
+            }
+          
+
+
+        }
+       
+
+        
+    
+
+
+        }
     }
 
 
+    
 
-}
