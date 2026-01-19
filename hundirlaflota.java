@@ -19,7 +19,7 @@ public class hundirlaflota {
     //aquí se pueden poner los caracteres para el agua, el hundido y los chars del barco aliado y el enemigo
     static final String AGUA = "~";
     static final String BLOQUEO = "#"; //Esto es para que el mapa no nos muestre los barcos enemigos
-    static final String VACIO = " "; // para inicializar el tablero
+    static final String VACIO = "#"; // para inicializar el tablero
 
     //Aqui van los "Personajes"
     static final String BARCO = "B";
@@ -46,11 +46,26 @@ public class hundirlaflota {
         }
     }
 
-   public static void pintarTablero(String[][] tablero) {
+   public static void pintarTableroJugador(String[][] tablero) {
         for (int i = 0; i < FILAS; i++) {
             for (int j = 0; j < COLUMNAS; j++) {
                 //IMPORTANTE: aqui SOLO pintamos, NO modificamos el tablero real
-                System.out.print(BLOQUEO + " "); //Aqui hacemos que el tablero se vea con #
+                
+                System.out.print(tablero[i][j] + " "); //Aqui hacemos que el tablero se vea con #
+            }
+            System.out.println();
+        }
+    }
+
+    static void pintarTableroEnemigo(String[][] tableroEnemigo) {
+        System.out.println("TABLERO ENEMIGO");
+        for (int i = 0; i < FILAS; i++) {
+            for (int j = 0; j < COLUMNAS; j++) {
+                if (tableroEnemigo[i][j].equals(ENEMIGO)) {
+                    System.out.print(BLOQUEO + " ");
+                } else {
+                    System.out.print(tableroEnemigo[i][j] + " ");
+                }
             }
             System.out.println();
         }
@@ -59,6 +74,13 @@ public class hundirlaflota {
     static void colocarBarcos(String[][] tablero) {
         Scanner sc = new Scanner(System.in);
         int barcospuestos = 3; //Aqui ponemos que los barcos que vamos a poner van a ser 3
+
+
+
+        //MEMBRETE DEL JUEGO
+
+        System.out.println("=====================HUNDIR LA FLOTA JAVA===================");
+
 
         //esto hace que siempre que el numero de barcos que hayamos puesto sea diferente a 0
         while (barcospuestos != 0) {
@@ -121,10 +143,10 @@ public class hundirlaflota {
         inicializarTablero(tablero);
         inicializarTableroEnemigo(tableroEnemigo);
 
-        pintarTablero(tablero);
+        pintarTableroJugador(tablero);
         colocarBarcos(tablero);
         barcosEnemigos(tableroEnemigo);
-
+        pintarTableroEnemigo(tableroEnemigo);
         while(salir != true){
             //Turno ataque aliado
             while (barcosDerribados != 0) {
@@ -167,7 +189,8 @@ public class hundirlaflota {
                     salir = true;
                     return;
                 }
-
+                pintarTableroJugador(tablero);
+                pintarTableroEnemigo(tableroEnemigo);
             }
 
             if(barcosDerribados == 0){
